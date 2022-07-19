@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('./partial/head.ejs')%>
+<body>
+    <%- include('./partial/nav.ejs')%>
+    <h1>Форма</h1>
+    <form method="post" action="/edit/<%= post.id%>?_method=PUT">
+        <div class="mb-3">
+            <label class="form-label">Post title</label>
+            <input type="text" class="form-control" name="title" value="<%= post.title%>">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Post author</label>
+            <input type="text" class="form-control" name="author" value="<%= post.author%>">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Post text</label>
+            <textarea class="form-control" rows="3" name="text" ><%= post.text%></textarea>
+        </div>
+        <button class="btn btn-primary">Send</button>
+    </form>
+</body>
+</html>

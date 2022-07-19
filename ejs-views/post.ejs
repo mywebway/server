@@ -4,13 +4,28 @@
 <body>
 <%- include('./partial/nav.ejs')%>
     <h1>Пост</h1>
+    <a class="btn btn-light" href="/posts">Назад</a>
     <div class="info">
-        <span><%= post.date%></span>
+        <span><%= post.createdAt.toLocaleDateString()%></span>
         <span><%= post.author%></span>
         <h2><%= post.title%></h2>
         <p>
             <%= post.text%>
         </p>
+        <button class="btn btn-danger" data-id="<%= post.id%>">Удалить</button>
+        <a href="/edit/<%= post.id%>" class="btn btn-warning">Редактировать</a>
     </div>
 </body>
+<script>
+    document.addEventListener('click', function (e){
+        const id = e.target?.dataset?.id || null
+        if(id){
+            fetch(`/posts/${id}`, {
+                method:'DELETE'
+            }).then(()=> {
+                window.location.href='/posts';
+            })
+        }
+    })
+</script>
 </html>

@@ -7,21 +7,33 @@
 
 
 <div class="row">
-    <% posts.forEach(function({id,title,date,text,author}){ %>
+    <% posts.forEach(function({id,title,date,text,author,createdAt}){ %>
         <div class="card col-lg-4 mt-3">
             <div class="card-body">
                 <div class="d-flex mb-3">
                     <strong><%= author%></strong>
-                    <span style="margin-left: auto"><%= date || 'No date'%></span>
+                    <span style="margin-left: auto"><%= createdAt.toLocaleDateString() || 'No date'%></span>
                 </div>
                 <h5 class="card-title"><%= title%></h5>
                 <p class="card-text"><%= text%></p>
                 <a href="/post/<%= id%>" class="btn btn-primary">Link post</a>
+                <button class="btn btn-danger" data-id="<%= id%>">Удалить</button>
             </div>
         </div>
     <% }); %>
 </div>
 
-
 </body>
+<script>
+    document.addEventListener('click', function (e){
+        const id = e.target?.dataset?.id || null
+        if(id){
+            fetch(`/posts/${id}`, {
+                method:'DELETE'
+            }).then(()=> {
+                window.location.reload();
+            })
+        }
+    })
+</script>
 </html>

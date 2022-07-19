@@ -1,8 +1,10 @@
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
+const methodOverride = require('method-override')
 
 const Post = require('./models/post')
+const Contact = require('./models/contact')
 
 const PORT = 3131;
 const app = express();
@@ -10,6 +12,8 @@ const createPath = (page) => path.resolve(__dirname,'ejs-views', `${page}.ejs`);
 const db = 'mongodb://localhost:27017/news';
 
 app.set('view engine', 'ejs');
+
+app.use(methodOverride('_method'));
 
 
 mongoose
@@ -40,7 +44,7 @@ app.post('/add-post',((req, res) => {
     const post = new Post({title, author,text})
     post
         .save()
-        .then((result) => res.send(result))
+        .then((result) => res.redirect('/posts'))
         .catch((error)=> {
             console.log(error)
             res.render(createPath('error'))
@@ -56,12 +60,22 @@ app.post('/add-post',((req, res) => {
 }))
 
 app.get('/contacts', (req, res)=>{
-    const contacts = [
-        {name:'Sergey', link:'https://www.geeksforgeeks.org/express-js-res-send-function/'},
-        {name:'Anton', link:'https://www.geeksforgeeks.org/express-js-res-send-function/'},
-        {name:'Artur', link:'https://www.geeksforgeeks.org/express-js-res-send-function/'},
-    ]
-    res.render(createPath('contacts'),{contacts})
+    Contact
+        .find()
+        .then((contacts)=>{
+            res.render(createPath('contacts'),{contacts})
+        })
+        .catch((error)=> {
+            console.log(error)
+            res.render(createPath('error'))
+        })
+
+    // const contacts = [
+    //     {name:'Sergey', link:'https://www.geeksforgeeks.org/express-js-res-send-function/'},
+    //     {name:'Anton', link:'https://www.geeksforgeeks.org/express-js-res-send-function/'},
+    //     {name:'Artur', link:'https://www.geeksforgeeks.org/express-js-res-send-function/'},
+    // ]
+    // res.render(createPath('contacts'),{contacts})
 });
 
 app.get('/about', (req, res)=>{
@@ -69,27 +83,70 @@ app.get('/about', (req, res)=>{
 });
 
 app.get('/post/:id', (req, res)=>{
-    const post = {
-        id:'1',
-        text:'Some quick example text to build on the card title and make up the bulk of the card\'s content.',
-        title:'Post title',
-        date:'05.05.2022',
-        author:'Konoplitskii'
-    };
-    res.render(createPath('post'),{post})
+    Post
+        .findById(req.params.id)
+        .then((post)=>{
+            res.render(createPath('post'),{post})
+        })
+        .catch((error)=> {
+            console.log(error)
+            res.render(createPath('error'))
+        })
 });
 
+
+app.get('/edit/:id', (req, res)=>{
+    Post
+        .findById(req.params.id)
+        .then((post)=>{
+            res.render(createPath('edit-post'),{post})
+        })
+        .catch((error)=> {
+            console.log(error)
+            res.render(createPath('error'))
+        })
+});
+
+app.put('/edit/:id', (req, res)=>{
+    const {title, author,text} = req.body;
+    const {id} = req.params;
+    Post
+        .findByIdAndUpdate(id, {title, author,text})
+        .then((post)=>{
+            res.redirect(`/post/${id}`)
+        })
+        .catch((error)=> {
+            console.log(error)
+            res.render(createPath('error'))
+        })
+});
+
+
+
+app.delete('/posts/:id', (req, res)=>{
+    Post
+        .findByIdAndDelete(req.params.id)
+        .then((result)=>{
+            res.sendStatus(200);
+        })
+        .catch((error)=> {
+            console.log(error)
+            res.render(createPath('error'))
+        })
+});
+
+
 app.get('/posts', (req, res)=>{
-const posts = [
-    {
-        id:'1',
-        text:'Some quick example text to build on the card title and make up the bulk of the card\'s content.',
-        title:'Post title',
-        date:'05.05.2022',
-        author:'Konoplitskii'
-    },
-]
-    res.render(createPath('posts'),{posts});
+    Post
+        .find()
+        .sort({createdAt: -1})
+        .then((posts)=>{
+            res.render(createPath('posts'),{posts})
+        })
+        .catch((error)=> {
+            console.log(error)
+            res.render(createPath('error'))
+        })
 });
 
 app.get('/add-post', (req, res)=>{

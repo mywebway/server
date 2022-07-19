@@ -7,7 +7,7 @@ const server = http.createServer((req,res) => {
     res.statusCode = 200;
     res.setHeader('Content-type', 'text/html');
 
-    fs.readFile('./views/index.html', (err,data)=> {
+    fs.readFile('./views/index.ejs', (err,data)=> {
         res.write(data);
         res.end();
     })

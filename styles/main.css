@@ -1,0 +1,10 @@
+body {
+    max-width: 900px;
+    margin-left: auto!important;
+    margin-right: auto!important;
+}
+
+.card {
+    margin-left: 15px!important;
+    margin-right: 15px!important;
+}

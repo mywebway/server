@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('./partial/head.ejs')%>
+<body>
+<%- include('./partial/nav.ejs')%>
+    <h1>Контакты</h1>
+    <ul>
+        <% contacts.forEach(function({link,name}){ %>
+            <a href="<%= link%>"><%= name%></a>
+        <% }); %>
+    </ul>
+</body>
+</html>

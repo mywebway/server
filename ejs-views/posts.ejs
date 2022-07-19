@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<%- include('./partial/head.ejs')%>
+<body>
+<%- include('./partial/nav.ejs')%>
+    <h1>Посты</h1>
+
+
+<div class="row">
+    <% posts.forEach(function({id,title,date,text,author}){ %>
+        <div class="card col-lg-4 mt-3">
+            <div class="card-body">
+                <div class="d-flex mb-3">
+                    <strong><%= author%></strong>
+                    <span style="margin-left: auto"><%= date || 'No date'%></span>
+                </div>
+                <h5 class="card-title"><%= title%></h5>
+                <p class="card-text"><%= text%></p>
+                <a href="/post/<%= id%>" class="btn btn-primary">Link post</a>
+            </div>
+        </div>
+    <% }); %>
+</div>
+
+
+</body>
+</html>

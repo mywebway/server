@@ -15,7 +15,7 @@ const server = http.createServer((req,res) => {
 
 
 server.listen('3211', ()=> {
- console.log('Server start')
+ console.log('Server start now')
 })
 
 
